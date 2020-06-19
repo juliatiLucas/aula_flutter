@@ -163,13 +163,9 @@ class _HomePageState extends State<HomePage> {
       //   onTap: _onItemTapped,
       // ),
       body: Column(children: [
+        Expanded(flex: 1, child: SizedBox(height: 5)),
         Expanded(
-            flex: 1,
-            child: SizedBox(
-              height: 10,
-            )),
-        Expanded(
-          flex: 12,
+          flex: 15,
           child: Stack(
             children: <Widget>[
               Positioned(
