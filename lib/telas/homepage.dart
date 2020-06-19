@@ -7,7 +7,7 @@ import '../utils/session.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import './aula_detalhe.dart';
+import '../components/aula_item.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -17,14 +17,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Session session = Session();
   List<String> options = ['Recarregar', 'Sair'];
-  int _selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   }
 
   void selectPopup(selected) async {
@@ -33,26 +30,30 @@ class _HomePageState extends State<HomePage> {
         setState(() {});
         break;
       case 'Sair':
-        showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Text("Tem certeza que deseja sair?"),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: Text('Cancelar', style: TextStyle(fontSize: 18)),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                    FlatButton(
-                      child: Text('Sim', style: TextStyle(fontSize: 18)),
-                      onPressed: () {
-                        session.logout();
-                        Navigator.pushNamedAndRemoveUntil(context, '/login', (Route<dynamic> route) => false);
-                      },
-                    )
-                  ],
-                ));
+        this.sair();
         break;
     }
+  }
+
+  void sair() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("Tem certeza que deseja sair?"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Cancelar', style: TextStyle(fontSize: 18)),
+                  onPressed: () => Navigator.pop(context),
+                ),
+                FlatButton(
+                  child: Text('Sim', style: TextStyle(fontSize: 18)),
+                  onPressed: () {
+                    session.logout();
+                    Navigator.pushNamedAndRemoveUntil(context, '/login', (Route<dynamic> route) => false);
+                  },
+                )
+              ],
+            ));
   }
 
   Future<List<Aula>> _getAulas() async {
@@ -85,12 +86,6 @@ class _HomePageState extends State<HomePage> {
 
   Future<String> _tipoUsuario() async => (await session.getUserInfo())['tipo_usuario'];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -114,7 +109,8 @@ class _HomePageState extends State<HomePage> {
             builder: (_, snapshot) {
               if (snapshot.hasData) {
                 return snapshot.data == 'professor'
-                    ? IconButton(icon: Icon(Icons.add, color: Colors.white), onPressed: () {})
+                    ? IconButton(
+                        icon: Icon(Icons.add, color: Colors.white), onPressed: () => Navigator.pushNamed(context, '/add-aula'))
                     : Container();
               }
 
@@ -132,7 +128,25 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      drawer: Drawer(),
+      drawer: Drawer(
+          child: ListView(padding: EdgeInsets.zero, children: <Widget>[
+        DrawerHeader(
+          child: Text('Drawer Header'),
+          decoration: BoxDecoration(
+            color: Colors.blue,
+          ),
+        ),
+        ListTile(
+          leading: Icon(Icons.sync),
+          title: Text('Sincronizar'),
+          onTap: () {},
+        ),
+        ListTile(
+          leading: Icon(Icons.exit_to_app),
+          title: Text('Sair'),
+          onTap: this.sair,
+        )
+      ])),
       // bottomNavigationBar: BottomNavigationBar(
       //   items: const <BottomNavigationBarItem>[
       //     BottomNavigationBarItem(
@@ -182,36 +196,7 @@ class _HomePageState extends State<HomePage> {
                                         itemCount: snapshot.data.length,
                                         itemBuilder: (_, index) {
                                           Aula aula = snapshot.data[index];
-                                          return Container(
-                                            padding: EdgeInsets.symmetric(vertical: 12),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: <Widget>[
-                                                InkWell(
-                                                    highlightColor: Colors.grey,
-                                                    enableFeedback: true,
-                                                    hoverColor: Colors.grey,
-                                                    splashColor: Colors.grey,
-                                                    onTap: () => Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (_) => AulaDetalhe(
-                                                                  aula: aula,
-                                                                ))),
-                                                    child: Text(
-                                                      aula.nome.length > 20 ? aula.nome.substring(0, 20) + '...' : aula.nome,
-                                                      style: TextStyle(fontSize: 18),
-                                                    )),
-                                                Container(
-                                                  padding: EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-                                                  decoration: BoxDecoration(
-                                                      color: Cores.light.withOpacity(0.7),
-                                                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                                                  child: Text(aula.data, style: TextStyle(color: Colors.white)),
-                                                )
-                                              ],
-                                            ),
-                                          );
+                                          return AulaItem(aula: aula);
                                         }),
                                   );
                                 }

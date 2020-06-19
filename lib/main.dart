@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import './telas/homepage.dart';
 import './telas/login.dart';
 import './telas/cadastro.dart';
-import './telas/aula_detalhe.dart';
 import './utils/cores.dart';
+import 'telas/add_aula.dart';
 import 'utils/session.dart';
 
 void main() {
@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => Login(),
         '/cadastro': (context) => Cadastro(),
         '/home': (context) => HomePage(),
+        '/add-aula': (context) => AddAula(),
       },
       theme: ThemeData(
         primaryColor: Cores.primary,

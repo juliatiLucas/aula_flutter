@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import '../utils/cores.dart';
-import '../models/professor.dart';
-import '../models/aluno.dart';
 import 'package:flushbar/flushbar.dart';
 import '../utils/config.dart';
 import 'package:http/http.dart' as http;
