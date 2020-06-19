@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../utils/cores.dart';
 import 'add_aluno.dart';
 import 'add_tarefa.dart';
+import 'config_aula.dart';
 
 class AulaDetalhe extends StatefulWidget {
   AulaDetalhe({this.aula});
@@ -32,9 +33,7 @@ class _AulaDetalheState extends State<AulaDetalhe> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
+                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
                         IconButton(
                             icon: Icon(Icons.arrow_back),
                             onPressed: () => Navigator.pop(context),
@@ -44,7 +43,12 @@ class _AulaDetalheState extends State<AulaDetalhe> {
                             splashColor: Colors.white),
                         IconButton(
                             icon: Icon(Icons.settings),
-                            onPressed: () {},
+                            onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => ConfigAula(
+                                          aula: widget.aula,
+                                        ))),
                             color: Colors.white,
                             highlightColor: Colors.white,
                             focusColor: Colors.white,
@@ -71,12 +75,12 @@ class _AulaDetalheState extends State<AulaDetalhe> {
                       titulo: 'Adicionar aluno',
                       cor: Colors.purple[400],
                       icone: Icons.people,
-                      acao: () => Navigator.push(context, MaterialPageRoute(builder: (context) => AddAluno(aula: widget.aula)))),
+                      acao: () => Navigator.push(context, MaterialPageRoute(builder: (_) => AddAluno(aula: widget.aula)))),
                   Opcao(
                       titulo: 'Adicionar tarefa',
                       cor: Colors.teal[400],
                       icone: Icons.assignment,
-                      acao: () => Navigator.push(context, MaterialPageRoute(builder: (context) => AddTarefa(aula: widget.aula)))),
+                      acao: () => Navigator.push(context, MaterialPageRoute(builder: (_) => AddTarefa(aula: widget.aula)))),
                   Opcao(
                     titulo: 'Fazer chamada',
                     cor: Colors.blue,
@@ -127,7 +131,7 @@ class _OpcaoState extends State<Opcao> {
           duration: Duration(milliseconds: 120),
           margin: EdgeInsets.symmetric(vertical: 5, horizontal: 4),
           padding: EdgeInsets.symmetric(vertical: 2, horizontal: 5),
-          width: 200,
+          width: 180,
           decoration: BoxDecoration(
               color: widget.cor,
               borderRadius: BorderRadius.all(Radius.circular(8)),
