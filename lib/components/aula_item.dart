@@ -10,12 +10,15 @@ class AulaItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-        onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (_) => AulaDetalhe(
-                      aula: aula,
-                    ))),
+      
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => AulaDetalhe(
+                        aula: aula,
+                      )));
+        },
         title: Container(
             child: Text(aula.nome.length > 20 ? aula.nome.substring(0, 20) + '...' : aula.nome, style: TextStyle(fontSize: 18))),
         trailing: Container(

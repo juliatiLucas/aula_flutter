@@ -140,22 +140,6 @@ class _HomePageState extends State<HomePage> {
           onTap: this.sair,
         )
       ])),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: const <BottomNavigationBarItem>[
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.school),
-      //       title: Text('Aulas'),
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.notifications),
-      //       title: Text('Convites'),
-      //     ),
-      //   ],
-      //   currentIndex: _selectedIndex,
-      //   selectedItemColor: Colors.blue,
-      //   onTap: _onItemTapped,
-      // ),
-
       body: Column(children: [
         Expanded(flex: 1, child: SizedBox(height: 5)),
         Expanded(

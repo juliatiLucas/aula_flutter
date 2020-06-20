@@ -5,6 +5,7 @@ import '../models/mensagem.dart';
 import '../models/tarefa.dart';
 import 'package:flutter/material.dart';
 import '../models/aula.dart';
+
 import '../utils/cores.dart';
 import '../utils/session.dart';
 import '../utils/config.dart';
@@ -68,6 +69,7 @@ class _AulaInfoState extends State<AulaInfo> {
     }
     return tarefas;
   }
+
 
   @override
   Widget build(BuildContext context) {

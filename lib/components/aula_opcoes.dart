@@ -12,32 +12,16 @@ class Opcao extends StatefulWidget {
 }
 
 class _OpcaoState extends State<Opcao> {
-  bool active = false;
-  void click() async {
-    setState(() {
-      active = !active;
-    });
-    await Future.delayed(Duration(milliseconds: 480), () {
-      setState(() {
-        active = !active;
-      });
-    });
-    widget.acao();
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: this.click,
+        onTap: widget.acao,
         child: AnimatedContainer(
-          duration: Duration(milliseconds: 120),
+          duration: Duration(milliseconds: 20),
           margin: EdgeInsets.symmetric(vertical: 5, horizontal: 4),
           padding: EdgeInsets.symmetric(vertical: 2, horizontal: 5),
           width: 180,
-          decoration: BoxDecoration(
-              color: widget.cor,
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              boxShadow: active ? [BoxShadow(color: widget.cor.withOpacity(0.97), offset: Offset(0, 0), blurRadius: 4)] : []),
+          decoration: BoxDecoration(color: widget.cor, borderRadius: BorderRadius.all(Radius.circular(8))),
           child: Container(
               child: Stack(
             children: <Widget>[
