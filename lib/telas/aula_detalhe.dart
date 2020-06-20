@@ -1,10 +1,15 @@
+import 'dart:convert';
+import '../components/mensagem_item.dart';
+import '../components/tarefa_card.dart';
+import '../models/mensagem.dart';
+import '../models/tarefa.dart';
 import 'package:flutter/material.dart';
 import '../models/aula.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../utils/cores.dart';
-import 'add_aluno.dart';
-import 'add_tarefa.dart';
-import 'config_aula.dart';
+import '../utils/session.dart';
+import '../utils/config.dart';
+import 'package:http/http.dart' as http;
+import '../components/aula_detalhe_header.dart';
 
 class AulaDetalhe extends StatefulWidget {
   AulaDetalhe({this.aula});
@@ -15,140 +20,215 @@ class AulaDetalhe extends StatefulWidget {
 }
 
 class _AulaDetalheState extends State<AulaDetalhe> {
+  int _bottomIndex = 0;
   @override
   Widget build(BuildContext context) {
-    // Size size = MediaQuery.of(context).size;
-
+    List<Widget> _telas = [AulaInfo(aula: widget.aula), Discussao(aula: widget.aula)];
     return Scaffold(
-      body: Container(
-          child: Stack(
-        children: <Widget>[
-          Container(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              Container(
-                  height: 200,
-                  decoration: BoxDecoration(color: Cores.primary),
-                  padding: EdgeInsets.only(top: 25, bottom: 70, left: 10, right: 10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
-                        IconButton(
-                            icon: Icon(Icons.arrow_back),
-                            onPressed: () => Navigator.pop(context),
-                            color: Colors.white,
-                            highlightColor: Colors.white,
-                            focusColor: Colors.white,
-                            splashColor: Colors.white),
-                        IconButton(
-                            icon: Icon(Icons.settings),
-                            onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => ConfigAula(
-                                          aula: widget.aula,
-                                        ))),
-                            color: Colors.white,
-                            highlightColor: Colors.white,
-                            focusColor: Colors.white,
-                            splashColor: Colors.white),
-                      ]),
-                      Text(widget.aula.nome,
-                          style: GoogleFonts.dmSans(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold))
-                    ],
-                  )),
-            ]),
-          ),
-          Positioned(
-            top: 150,
-            left: 0,
-            right: 0,
-            child: Container(
-              height: 115,
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                children: <Widget>[
-                  Opcao(
-                      titulo: 'Adicionar aluno',
-                      cor: Colors.purple[400],
-                      icone: Icons.people,
-                      acao: () => Navigator.push(context, MaterialPageRoute(builder: (_) => AddAluno(aula: widget.aula)))),
-                  Opcao(
-                      titulo: 'Adicionar tarefa',
-                      cor: Colors.teal[400],
-                      icone: Icons.assignment,
-                      acao: () => Navigator.push(context, MaterialPageRoute(builder: (_) => AddTarefa(aula: widget.aula)))),
-                  Opcao(
-                    titulo: 'Fazer chamada',
-                    cor: Colors.blue,
-                    icone: Icons.list,
-                    acao: () {
-                      print('a');
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: this._bottomIndex,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.school), title: Text('Aula')),
+          BottomNavigationBarItem(icon: Icon(Icons.chat), title: Text('Discussão'))
         ],
-      )),
+        onTap: (index) {
+          setState(() {
+            this._bottomIndex = index;
+          });
+        },
+      ),
+      body: _telas[this._bottomIndex],
     );
   }
 }
 
-class Opcao extends StatefulWidget {
-  Opcao({this.titulo, this.cor, this.icone, this.acao});
-  final String titulo;
-  final Color cor;
-  final IconData icone;
-  final Function acao;
+class AulaInfo extends StatefulWidget {
+  AulaInfo({this.aula});
+  final Aula aula;
+
   @override
-  _OpcaoState createState() => _OpcaoState();
+  _AulaInfoState createState() => _AulaInfoState();
 }
 
-class _OpcaoState extends State<Opcao> {
-  bool active = false;
-  void click() async {
-    setState(() {
-      active = !active;
-    });
-    await Future.delayed(Duration(milliseconds: 480), () {
-      setState(() {
-        active = !active;
-      });
-    });
-    widget.acao();
+class _AulaInfoState extends State<AulaInfo> {
+  Session session = Session();
+
+  Future<bool> isProfessor() async {
+    return (await session.getUserInfo())['tipo_usuario'] == 'professor';
+  }
+
+  Future<List<Tarefa>> getTarefas() async {
+    List<Tarefa> tarefas = [];
+    http.Response res = await http.get("${Config.api}/aulas/${widget.aula.id}/tarefas");
+    if (res.statusCode == 200) {
+      for (var t in json.decode(res.body)) {
+        Tarefa tarefa = Tarefa.fromJson(t);
+        tarefas.add(tarefa);
+      }
+    }
+    return tarefas;
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: this.click,
-        child: AnimatedContainer(
-          duration: Duration(milliseconds: 120),
-          margin: EdgeInsets.symmetric(vertical: 5, horizontal: 4),
-          padding: EdgeInsets.symmetric(vertical: 2, horizontal: 5),
-          width: 180,
-          decoration: BoxDecoration(
-              color: widget.cor,
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-              boxShadow: active ? [BoxShadow(color: widget.cor.withOpacity(0.97), offset: Offset(0, 0), blurRadius: 4)] : []),
-          child: Container(
-              child: Stack(
-            children: <Widget>[
-              Positioned(
-                bottom: 0,
-                child: Opacity(
-                  opacity: 0.4,
-                  child: Icon(widget.icone, size: 60, color: Colors.white),
-                ),
+    return Column(children: [
+      FutureBuilder<bool>(
+        future: this.isProfessor(),
+        builder: (_, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done)
+            return Container(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                AulaDetalheHeader(aula: widget.aula, isProfessor: snapshot.data),
+                Container(
+                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 16),
+                    child: Text("Tarefas", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)))
+              ],
+            ));
+          return Container(
+            height: 160,
+            decoration: BoxDecoration(color: Cores.primary),
+          );
+        },
+      ),
+      Expanded(
+        child: FutureBuilder<List<Tarefa>>(
+            future: this.getTarefas(),
+            builder: (_, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done)
+                return ListView.builder(
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (_, index) {
+                      Tarefa tarefa = snapshot.data[index];
+                      return TarefaCard(tarefa: tarefa);
+                    });
+              return Container();
+            }),
+      )
+    ]);
+  }
+}
+
+class Discussao extends StatefulWidget {
+  Discussao({this.aula});
+  final Aula aula;
+  @override
+  _DiscussaoState createState() => _DiscussaoState();
+}
+
+class _DiscussaoState extends State<Discussao> {
+  FocusNode msgFocus;
+
+  @override
+  void initState() {
+    super.initState();
+
+    msgFocus = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    msgFocus.dispose();
+
+    super.dispose();
+  }
+
+  TextEditingController _mensagem = TextEditingController();
+  Session session = Session();
+  Future<List<Mensagem>> _getMensagens() async {
+    List<Mensagem> mensagens = [];
+    http.Response res = await http.get("${Config.api}/aulas/${widget.aula.id}/mensagens/");
+    if (res.statusCode == 200) {
+      for (var m in json.decode(res.body)) {
+        Mensagem mensagem = Mensagem.fromJson(m);
+        mensagens.add(mensagem);
+      }
+    }
+    return mensagens;
+  }
+
+  void enviar() async {
+    String mensagem = this._mensagem.text;
+    if (mensagem.isEmpty) return;
+    Map<String, dynamic> userInfo = await session.getUserInfo();
+    Map<String, String> data = {"texto": mensagem, "imagem": ""};
+
+    if (userInfo['tipo_usuario'] == 'professor')
+      data['professor'] = userInfo['id'].toString();
+    else if (userInfo['tipo_usuario'] == 'aluno') data['aluno'] = userInfo['id'].toString();
+
+    setState(() {
+      this._mensagem.text = "";
+      msgFocus.unfocus();
+    });
+    http.post("${Config.api}/aulas/${widget.aula.id}/mensagens/", body: data).then((value) {
+      if (value.statusCode == 201) {
+        setState(() {});
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Discussão'), elevation: 0),
+      body: Container(
+        child: Column(children: <Widget>[
+          Expanded(
+            flex: 8,
+            child: FutureBuilder<List<Mensagem>>(
+              future: this._getMensagens(),
+              builder: (_, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return ListView.builder(
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (_, index) {
+                        Mensagem mensagem = snapshot.data[index];
+                        return MensagemItem(mensagem: mensagem);
+                      });
+                }
+                return Container();
+              },
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+              color: Colors.transparent,
+              padding: EdgeInsets.symmetric(vertical: 2, horizontal: 12),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                      flex: 8,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(25)),
+                        child: TextFormField(
+                          focusNode: this.msgFocus,
+                          controller: this._mensagem,
+                          style: TextStyle(color: Cores.dark),
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              fillColor: Colors.grey[300].withOpacity(0.7),
+                              filled: true,
+                              hintStyle: TextStyle(color: Cores.dark.withOpacity(0.6)),
+                              hintText: 'Sua mensagem'),
+                        ),
+                      )),
+                  IconButton(
+                    icon: Icon(Icons.send),
+                    onPressed: this.enviar,
+                  )
+                ],
               ),
-              Text(widget.titulo, style: GoogleFonts.dmSans(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white))
-            ],
-          )),
-        ));
+            ),
+          ),
+        ]),
+      ),
+    );
   }
 }

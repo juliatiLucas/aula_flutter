@@ -4,8 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import '../models/aula.dart';
 import '../utils/cores.dart';
+import '../telas/aula_detalhe.dart';
+import 'package:flushbar/flushbar.dart';
 import '../components/input.dart';
 import 'package:intl/intl.dart';
+import '../utils/config.dart';
 
 class AddTarefa extends StatefulWidget {
   AddTarefa({this.aula});
@@ -18,9 +21,47 @@ class _AddTarefaState extends State<AddTarefa> {
   Session session = Session();
   TextEditingController _nome = TextEditingController();
   TextEditingController _descricao = TextEditingController();
-  String _data;
-  String _hora;
-  void adicionar() async {}
+  String _data = '';
+  String _hora = '';
+  void adicionar() async {
+    String nome = this._nome.text;
+    String descricao = this._descricao.text;
+
+    if (this._data.isEmpty || this._hora.isEmpty || descricao.isEmpty || nome.isEmpty) {
+      mostrarSnack(titulo: 'Erro', mensagem: 'Preencha todos os campos!');
+      return;
+    }
+
+    Map<String, String> data = {
+      "aula": widget.aula.id.toString(),
+      "nome": nome,
+      "descricao": descricao,
+      "prazo": "${_data.split('/').reversed.toList().join('-')} $_hora"
+    };
+
+    http.post("${Config.api}/tarefas/", body: data).then((res) async {
+      print(res.statusCode);
+      print(res.body);
+      if (res.statusCode == 201) {
+        mostrarSnack(titulo: 'Sucesso', mensagem: 'Tarefa criada.');
+        await Future.delayed(Duration(milliseconds: 2500), () {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => AulaDetalhe(aula: widget.aula)), (Route<dynamic> route) => false);
+        });
+      }
+    }).catchError((err) {
+      print(err);
+    }) ;
+  }
+
+  mostrarSnack({String titulo, String mensagem}) {
+    Flushbar(
+      title: titulo,
+      message: mensagem,
+      animationDuration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 2500),
+    )..show(context);
+  }
 
   void escolherData() {
     showDatePicker(
@@ -37,7 +78,7 @@ class _AddTarefaState extends State<AddTarefa> {
       },
     ).then((value) {
       setState(() {
-        this._data = new DateFormat('d/M/y').format(value);
+        this._data = new DateFormat('d/MM/y').format(value);
       });
     });
   }
@@ -45,7 +86,7 @@ class _AddTarefaState extends State<AddTarefa> {
   void escolherHora() {
     showTimePicker(context: context, initialTime: TimeOfDay(hour: 12, minute: 0)).then((value) {
       setState(() {
-        this._hora = value.format(context);
+        this._hora = value.format(context)+':00';
       });
     });
   }

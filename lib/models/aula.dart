@@ -1,5 +1,11 @@
 import './professor.dart';
 import 'package:intl/intl.dart';
+import 'dart:convert' show utf8;
+
+String utf8convert(String text) {
+  List<int> bytes = text.toString().codeUnits;
+  return utf8.decode(bytes);
+}
 
 class Aula {
   int id;
@@ -23,7 +29,7 @@ class Aula {
 
   Aula.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    nome = json['nome'];
+    nome = utf8convert(json['nome']);
     professor = json['professor'] != null ? new Professor.fromJson(json['professor']) : null;
     data = new DateFormat('d/M/y HH:mm:ss').format(DateTime.parse(json['data']));
   }

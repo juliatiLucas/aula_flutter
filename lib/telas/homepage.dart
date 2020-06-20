@@ -1,5 +1,5 @@
-import 'package:banco_dados/models/aula.dart';
-import 'package:banco_dados/utils/config.dart';
+import '../models/aula.dart';
+import '../utils/config.dart';
 import 'package:flutter/material.dart';
 import '../utils/cores.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -68,16 +68,9 @@ class _HomePageState extends State<HomePage> {
 
     http.Response res = await http.get(url);
     if (res.statusCode == 200) {
-      if (userData['tipo_usuario'] == 'aluno') {
-        for (var a in json.decode(res.body)) {
-          Aula aula = Aula.fromJson(a['aula']);
-          aulas.add(aula);
-        }
-      } else {
-        for (var a in json.decode(res.body)) {
-          Aula aula = Aula.fromJson(a);
-          aulas.add(aula);
-        }
+      for (var a in json.decode(res.body)) {
+        Aula aula = Aula.fromJson(a);
+        aulas.add(aula);
       }
     }
 
@@ -133,7 +126,7 @@ class _HomePageState extends State<HomePage> {
         DrawerHeader(
           child: Text('Drawer Header'),
           decoration: BoxDecoration(
-            color: Colors.blue,
+            color: Cores.primary,
           ),
         ),
         ListTile(
@@ -162,6 +155,7 @@ class _HomePageState extends State<HomePage> {
       //   selectedItemColor: Colors.blue,
       //   onTap: _onItemTapped,
       // ),
+
       body: Column(children: [
         Expanded(flex: 1, child: SizedBox(height: 5)),
         Expanded(
@@ -171,34 +165,34 @@ class _HomePageState extends State<HomePage> {
               Positioned(
                 width: size.width,
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 0),
                   decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.all(Radius.circular(15))),
                   child: Container(
-                    height: size.height - 160,
+                    height: size.height - 150,
                     child: Column(
                       children: <Widget>[
                         Text('Suas turmas', style: GoogleFonts.dmSans(fontSize: 20, fontWeight: FontWeight.bold)),
-                        Container(
-                            padding: EdgeInsets.only(top: 15, bottom: 15),
-                            child: FutureBuilder<List<Aula>>(
-                              future: this._getAulas(),
-                              builder: (_, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return Container(height: 40, width: 40, child: CircularProgressIndicator());
-                                } else if (snapshot.connectionState == ConnectionState.done) {
-                                  return Container(
-                                    height: size.height * 0.65,
-                                    child: ListView.builder(
-                                        itemCount: snapshot.data.length,
-                                        itemBuilder: (_, index) {
-                                          Aula aula = snapshot.data[index];
-                                          return AulaItem(aula: aula);
-                                        }),
-                                  );
-                                }
-                                return Container();
-                              },
-                            ))
+                        Expanded(
+                          child: Container(
+                              padding: EdgeInsets.only(top: 15, bottom: 15),
+                              child: FutureBuilder<List<Aula>>(
+                                future: this._getAulas(),
+                                builder: (_, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return Container(height: 40, width: 40, child: Center(child: CircularProgressIndicator()));
+                                  } else if (snapshot.connectionState == ConnectionState.done) {
+                                    return ListView.builder(
+                                      itemCount: snapshot.data.length,
+                                      itemBuilder: (_, index) {
+                                        Aula aula = snapshot.data[index];
+                                        return AulaItem(aula: aula);
+                                      },
+                                    );
+                                  }
+                                  return Container();
+                                },
+                              )),
+                        )
                       ],
                     ),
                   ),

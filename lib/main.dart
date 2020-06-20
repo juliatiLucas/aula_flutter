@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import './telas/homepage.dart';
 import './telas/login.dart';
 import './telas/cadastro.dart';
@@ -7,28 +8,21 @@ import 'telas/add_aula.dart';
 import 'utils/session.dart';
 
 void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Banco de Dados N2',
-      debugShowCheckedModeBanner: false,
-      routes: {
-        '/login': (context) => Login(),
-        '/cadastro': (context) => Cadastro(),
-        '/home': (context) => HomePage(),
-        '/add-aula': (context) => AddAula(),
-      },
-      theme: ThemeData(
-        primaryColor: Cores.primary,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: Wrapper(),
-    );
-  }
+  runApp(GetMaterialApp(
+    title: 'Gerenciador de aula',
+    debugShowCheckedModeBanner: false,
+    routes: {
+      '/login': (context) => Login(),
+      '/cadastro': (context) => Cadastro(),
+      '/home': (context) => HomePage(),
+      '/add-aula': (context) => AddAula(),
+    },
+    theme: ThemeData(
+      primaryColor: Cores.primary,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+    ),
+    home: Wrapper(),
+  ));
 }
 
 class Wrapper extends StatefulWidget {
