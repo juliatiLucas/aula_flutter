@@ -78,7 +78,7 @@ class _CadastroState extends State<Cadastro> {
             width: 330,
             height: 380,
             child: Column(
-              children: <Widget>[
+              children: [
                 TextField(
                   controller: this._nome,
                   style: TextStyle(color: Colors.white),
@@ -118,7 +118,7 @@ class _CadastroState extends State<Cadastro> {
                           Radio(
                             groupValue: this._tipoUsuario,
                             onChanged: _handleRadioValueChange,
-                            value: 'aluno',
+                            value: 'aluno'
                           ),
                           Text('Aluno')
                         ]),
@@ -126,7 +126,7 @@ class _CadastroState extends State<Cadastro> {
                           Radio(
                             groupValue: this._tipoUsuario,
                             onChanged: _handleRadioValueChange,
-                            value: 'professor',
+                            value: 'professor'
                           ),
                           Text('Professor')
                         ])

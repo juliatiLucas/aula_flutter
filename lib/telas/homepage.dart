@@ -5,9 +5,9 @@ import '../utils/cores.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/session.dart';
 import 'package:http/http.dart' as http;
+import './aula_detalhe.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import '../components/aula_item.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -169,7 +169,11 @@ class _HomePageState extends State<HomePage> {
                                       itemCount: snapshot.data.length,
                                       itemBuilder: (_, index) {
                                         Aula aula = snapshot.data[index];
-                                        return AulaItem(aula: aula);
+                                        return ListTile(
+                                          onTap: () =>
+                                              Navigator.push(context, MaterialPageRoute(builder: (_) => AulaDetalhe(aula: aula))),
+                                          title: Text(aula.nome, style: TextStyle(fontSize: 18)),
+                                        );
                                       },
                                     );
                                   }

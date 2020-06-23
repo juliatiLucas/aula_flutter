@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/aula.dart';
 import '../models/aluno.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:http/http.dart' as http;
 import '../utils/config.dart';
 import 'dart:convert';
@@ -28,6 +29,29 @@ class _AddAlunoState extends State<AddAluno> {
         setState(() {
           this._resultado = alunos;
         });
+      }
+    });
+  }
+
+  mostrarSnack({String titulo, String mensagem}) {
+    Flushbar(
+      title: titulo,
+      message: mensagem,
+      animationDuration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 2500),
+    )..show(context);
+  }
+
+  void adicionar(int id) async {
+    Map<String, String> data = {
+      "aula": widget.aula.id.toString(),
+      "aluno": id.toString(),
+    };
+    http.post("${Config.api}/alunos/$id/aulas/", body: data).then((res) {
+      if (res.statusCode == 201) {
+        mostrarSnack(titulo: 'Sucesso', mensagem: 'Aluno adicionado à aula ${widget.aula.nome}.');
+      } else if (res.statusCode == 400) {
+        mostrarSnack(titulo: 'Erro', mensagem: 'o Aluno já participa da aula ${widget.aula.nome}!');
       }
     });
   }
@@ -70,7 +94,7 @@ class _AddAlunoState extends State<AddAluno> {
                         subtitle: Text(aluno.email),
                         trailing: IconButton(
                           icon: Icon(Icons.add),
-                          onPressed: () {},
+                          onPressed: () => this.adicionar(aluno.id),
                         ),
                       );
                     })),

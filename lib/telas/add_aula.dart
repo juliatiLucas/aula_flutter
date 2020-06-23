@@ -17,8 +17,6 @@ class AddAula extends StatefulWidget {
 class _AddAulaState extends State<AddAula> {
   Session session = Session();
   TextEditingController _nome = TextEditingController();
-  String _data;
-  String _hora;
 
   mostrarSnack({String titulo, String mensagem}) {
     Flushbar(
@@ -31,7 +29,7 @@ class _AddAulaState extends State<AddAula> {
 
   void adicionar() async {
     String nome = this._nome.text;
-    if (nome.isEmpty || this._data.isEmpty || this._hora.isEmpty) {
+    if (nome.isEmpty) {
       mostrarSnack(titulo: 'Erro', mensagem: 'Preencha todos os campos!');
       return;
     }
@@ -40,7 +38,6 @@ class _AddAulaState extends State<AddAula> {
     Map<String, String> data = {
       "nome": nome,
       "professor": (await session.getUserInfo())['id'].toString(),
-      "data": "${this._data.split('/').reversed.toList().join('-')} ${this._hora}"
     };
 
     await http.post("${Config.api}/aulas/", body: data).then((res) async {
@@ -50,34 +47,6 @@ class _AddAulaState extends State<AddAula> {
           Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false);
         });
       }
-    });
-  }
-
-  void escolherData() {
-    showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2050),
-      builder: (BuildContext context, Widget child) {
-        return Theme(
-          data: ThemeData.light()
-              .copyWith(primaryColor: Colors.purple, accentColor: Cores.primary, secondaryHeaderColor: Cores.primary),
-          child: child,
-        );
-      },
-    ).then((value) {
-      setState(() {
-        this._data = new DateFormat('d/M/y').format(value);
-      });
-    });
-  }
-
-  void escolherHora() {
-    showTimePicker(context: context, initialTime: TimeOfDay(hour: 12, minute: 0)).then((value) {
-      setState(() {
-        this._hora = value.format(context);
-      });
     });
   }
 
@@ -94,8 +63,6 @@ class _AddAulaState extends State<AddAula> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               MyInput(controller: this._nome, hint: 'Nome'),
-              DateInput(escolher: this.escolherData, valor: this._data, label: 'Data'),
-              DateInput(escolher: this.escolherHora, valor: this._hora, label: 'Hora'),
               FlatButton(
                 padding: EdgeInsets.symmetric(vertical: 18),
                 child: Text('Criar', style: TextStyle(color: Cores.primary, fontSize: 18)),
@@ -106,4 +73,3 @@ class _AddAulaState extends State<AddAula> {
     );
   }
 }
-

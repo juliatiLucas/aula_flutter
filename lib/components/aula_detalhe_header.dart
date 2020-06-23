@@ -6,6 +6,7 @@ import './aula_opcoes.dart';
 import '../telas/add_aluno.dart';
 import '../models/aluno.dart';
 import '../telas/add_tarefa.dart';
+import '../telas/chamada.dart';
 import '../utils/config.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -153,9 +154,7 @@ class AulaDetalheHeader extends StatelessWidget {
                         titulo: 'Fazer chamada',
                         cor: Colors.blue,
                         icone: Icons.list,
-                        acao: () {
-                          print('a');
-                        },
+                        acao: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ChamadaView(aula: aula))),
                       ),
                     ],
                   ),
