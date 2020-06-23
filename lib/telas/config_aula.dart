@@ -48,10 +48,10 @@ class _ConfigAulaState extends State<ConfigAula> {
                     if (this._nome.text.isEmpty) return;
                     var data = {"nome": this._nome.text};
                     http.put("${Config.api}/aulas/${widget.aula.id}/", body: data).then((res) {
-                      print(res.statusCode);
-                      print(res.body);
-                    }).catchError((err) {
-                      print(err);
+                      if (res.statusCode == 200) {
+                        Navigator.pop(context);
+                        Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
+                      }
                     });
                   },
                 )

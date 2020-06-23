@@ -3,7 +3,7 @@ import './aluno.dart';
 class Chamada {
   int id;
   Aluno aluno;
-  String presente;
+  bool presente;
 
   Chamada({this.id, this.aluno, this.presente});
 
