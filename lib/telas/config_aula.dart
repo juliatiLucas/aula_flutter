@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import '../utils/cores.dart';
 import '../models/aula.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/config.dart';
 import '../components/input.dart';
+import '../components/aula_opcoes.dart';
 
 class ConfigAula extends StatefulWidget {
   ConfigAula({this.aula});
@@ -30,7 +32,7 @@ class _ConfigAulaState extends State<ConfigAula> {
               title: Text("Editar ${widget.aula.nome}"),
               content: Container(
                 width: 300,
-                height: 120,
+                height: 80,
                 child: Column(
                   children: <Widget>[
                     MyInput(controller: this._nome, hint: 'Nome'),
@@ -79,26 +81,31 @@ class _ConfigAulaState extends State<ConfigAula> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Configurações', style: GoogleFonts.dmSans(fontWeight: FontWeight.bold)),
-        elevation: 0,
-      ),
-      body: Container(
-        child: ListView(
-          shrinkWrap: true,
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12),
+      height: 220,
+      child: Column(children: [
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 15),
+          child: Text(
+            'Configurações de ${widget.aula.nome}',
+            style: GoogleFonts.dmSans(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+        ),
+        Row(
           children: <Widget>[
-            ListTile(
-              title: Text('Editar aula'),
-              onTap: this.modalEditar,
-            ),
-            ListTile(
-              title: Text('Deletar aula'),
-              onTap: this.modalDeletar,
-            )
+            Expanded(
+                child: Container(
+              height: 120,
+              child: Opcao(titulo: 'Editar aula', cor: Color(0xfff5ad1d), icone: Icons.edit, acao: this.modalEditar),
+            )),
+            Expanded(
+                child: Container(
+                    height: 120,
+                    child: Opcao(titulo: 'Excluir aula', cor: Colors.red, icone: Icons.delete, acao: this.modalDeletar))),
           ],
         ),
-      ),
+      ]),
     );
   }
 }

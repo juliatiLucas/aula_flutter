@@ -67,6 +67,7 @@ class _LoginState extends State<Login> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.transparent,
+      resizeToAvoidBottomPadding: false,
       body: Stack(children: [
         Container(
           height: double.infinity,
@@ -78,7 +79,7 @@ class _LoginState extends State<Login> {
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               width: 330,
-              height: 430,
+              height: 480,
               child: Column(
                 children: <Widget>[
                   TextField(

@@ -136,9 +136,11 @@ class _DialogoState extends State<Dialogo> {
         );
       },
     );
-    setState(() {
-      this.data = new DateFormat('d/M/y').format(value);
-    });
+    if (value != null) {
+      setState(() {
+        this.data = new DateFormat('d/M/y').format(value);
+      });
+    }
   }
 
   @override
@@ -150,7 +152,7 @@ class _DialogoState extends State<Dialogo> {
         titlePadding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
         contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
         content: Container(
-          width: 300,
+          width: 400,
           height: 120,
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: Column(
@@ -238,10 +240,22 @@ class _DialogoListaState extends State<DialogoLista> {
                     title: Text('Lista de alunos'),
                     titlePadding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                     contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-                    content: Container(height: 350, width: 250, child: this.gerarLista(snapshot.data)),
+                    content: Container(height: 350, width: 400, child: this.gerarLista(snapshot.data)),
                   );
                 } else
-                  retorno = Container(height: 150, child: Center(child: Text('Sem alunos')));
+                  retorno = AlertDialog(
+                    title: Text('Lista de alunos'),
+                    titlePadding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                    contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+                    content: Container(height: 150, width: 400, child: Center(child: Text('Sem alunos'))),
+                    actions: <Widget>[
+                      FlatButton(
+                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                        child: Text('Fechar', style: TextStyle(fontSize: 18, color: Colors.blue)),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  );
 
                 break;
             }
@@ -328,7 +342,7 @@ class _VerListaState extends State<VerLista> {
           contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
           content: Container(
               height: 350,
-              width: 250,
+              width: 400,
               child: Column(children: [
                 Expanded(
                   flex: 12,

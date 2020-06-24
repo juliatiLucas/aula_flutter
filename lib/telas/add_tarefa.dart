@@ -51,7 +51,7 @@ class _AddTarefaState extends State<AddTarefa> {
       }
     }).catchError((err) {
       print(err);
-    }) ;
+    });
   }
 
   mostrarSnack({String titulo, String mensagem}) {
@@ -86,7 +86,7 @@ class _AddTarefaState extends State<AddTarefa> {
   void escolherHora() {
     showTimePicker(context: context, initialTime: TimeOfDay(hour: 12, minute: 0)).then((value) {
       setState(() {
-        this._hora = value.format(context)+':00';
+        this._hora = value.format(context) + ':00';
       });
     });
   }
@@ -110,11 +110,10 @@ class _AddTarefaState extends State<AddTarefa> {
                   Expanded(child: DateInput(escolher: this.escolherData, valor: this._data, label: 'Data')),
                   Expanded(child: DateInput(escolher: this.escolherHora, valor: this._hora, label: 'Hora')),
                 ]),
-                FlatButton(
-                  padding: EdgeInsets.symmetric(vertical: 18),
-                  child: Text('Criar', style: TextStyle(color: Cores.primary, fontSize: 18)),
+                RoundButton(
+                  text: 'Criar',
                   onPressed: this.adicionar,
-                ),
+                )
               ],
             )));
   }

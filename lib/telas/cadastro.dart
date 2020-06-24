@@ -66,6 +66,7 @@ class _CadastroState extends State<Cadastro> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
+      resizeToAvoidBottomPadding: false,
       body: Container(
         height: double.infinity,
         width: double.infinity,
@@ -76,7 +77,7 @@ class _CadastroState extends State<Cadastro> {
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             width: 330,
-            height: 380,
+            height: 450,
             child: Column(
               children: [
                 TextField(
@@ -115,19 +116,11 @@ class _CadastroState extends State<Cadastro> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
                         Row(children: <Widget>[
-                          Radio(
-                            groupValue: this._tipoUsuario,
-                            onChanged: _handleRadioValueChange,
-                            value: 'aluno'
-                          ),
+                          Radio(groupValue: this._tipoUsuario, onChanged: _handleRadioValueChange, value: 'aluno'),
                           Text('Aluno')
                         ]),
                         Row(children: <Widget>[
-                          Radio(
-                            groupValue: this._tipoUsuario,
-                            onChanged: _handleRadioValueChange,
-                            value: 'professor'
-                          ),
+                          Radio(groupValue: this._tipoUsuario, onChanged: _handleRadioValueChange, value: 'professor'),
                           Text('Professor')
                         ])
                       ],

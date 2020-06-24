@@ -62,13 +62,14 @@ class _AddAlunoState extends State<AddAluno> {
       appBar: AppBar(
         elevation: 0,
         title: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+          borderRadius: BorderRadius.all(Radius.circular(6)),
           child: TextFormField(
             controller: this._pesquisa,
             onFieldSubmitted: this.buscar,
+            autofocus: true,
             style: TextStyle(color: Colors.white),
             decoration: InputDecoration(
-                fillColor: Colors.white.withOpacity(0.22),
+                fillColor: Colors.black.withOpacity(0.23),
                 filled: true,
                 hintStyle: TextStyle(color: Colors.white.withOpacity(0.8)),
                 hintText: 'Nome ou email do aluno'),

@@ -12,12 +12,26 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 
-class AulaDetalheHeader extends StatelessWidget {
-  AulaDetalheHeader({this.aula, this.isProfessor});
+class AulaDetalheHeader extends StatefulWidget {
   final bool isProfessor;
   final Aula aula;
+  AulaDetalheHeader({this.aula, this.isProfessor});
 
-  void modalAlunos(context) async {
+  @override
+  _AulaDetalheHeaderState createState() => _AulaDetalheHeaderState();
+}
+
+class _AulaDetalheHeaderState extends State<AulaDetalheHeader> {
+  void removerAluno(int id) async {
+    http.delete("${Config.api}/alunos/$id/aulas/${widget.aula.id}/").then((res) {
+      if (res.statusCode == 200) {
+        Navigator.pop(context);
+        setState(() {});
+      }
+    });
+  }
+
+  modalAlunos() async {
     showDialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -34,13 +48,13 @@ class AulaDetalheHeader extends StatelessWidget {
                     case ConnectionState.active:
                       break;
                     case ConnectionState.waiting:
-                      retorno = Container(height: 350, child: Center(child: CircularProgressIndicator()));
+                      retorno = Container(height: 350, width: 380, child: Center(child: CircularProgressIndicator()));
                       break;
                     case ConnectionState.done:
                       if (snapshot.data.length > 0) {
                         retorno = Container(
                             height: 350,
-                            width: 250,
+                            width: 380,
                             child: ListView.builder(
                                 shrinkWrap: true,
                                 itemCount: snapshot.data.length,
@@ -51,25 +65,31 @@ class AulaDetalheHeader extends StatelessWidget {
                                     subtitle: Text(aluno.email),
                                     trailing: IconButton(
                                       icon: Icon(Icons.remove),
-                                      onPressed: () {},
+                                      onPressed: () => this.removerAluno(aluno.id),
                                     ),
                                   );
                                 }));
                       } else
-                        retorno = Container(height: 150, child: Center(child: Text('Sem alunos')));
+                        retorno = Container(height: 150, width: 380, child: Center(child: Text('Sem alunos')));
 
                       break;
                   }
-
                   return retorno;
                 },
               ),
+              actions: <Widget>[
+                FlatButton(
+                  padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                  child: Text('Fechar', style: TextStyle(fontSize: 18, color: Colors.blue)),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
             ));
   }
 
   Future<List<Aluno>> getAlunos() async {
     List<Aluno> alunos = [];
-    http.Response res = await http.get("${Config.api}/aulas/${aula.id}/alunos");
+    http.Response res = await http.get("${Config.api}/aulas/${widget.aula.id}/alunos");
     if (res.statusCode == 200) {
       for (var a in json.decode(res.body)) {
         Aluno aluno = Aluno.fromJson(a);
@@ -79,6 +99,15 @@ class AulaDetalheHeader extends StatelessWidget {
     return alunos;
   }
 
+  void mostrarBottom() {
+    showModalBottomSheet(
+        isDismissible: true,
+        context: context,
+        builder: (_) {
+          return ConfigAula(aula: widget.aula);
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -86,9 +115,9 @@ class AulaDetalheHeader extends StatelessWidget {
         Container(
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             Container(
-                height: isProfessor ? 200 : 160,
+                height: widget.isProfessor ? 200 : 160,
                 decoration: BoxDecoration(color: Cores.primary),
-                padding: EdgeInsets.only(top: 30, bottom: isProfessor ? 70 : 30, left: 7, right: 7),
+                padding: EdgeInsets.only(top: 30, bottom: widget.isProfessor ? 70 : 30, left: 7, right: 7),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,15 +130,13 @@ class AulaDetalheHeader extends StatelessWidget {
                           highlightColor: Colors.white,
                           focusColor: Colors.white,
                           splashColor: Colors.white),
-                      isProfessor
+                      widget.isProfessor
                           ? IconButton(
                               icon: Icon(Icons.settings),
-                              onPressed: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => ConfigAula(
-                                            aula: aula,
-                                          ))),
+                              onPressed: () {
+                                // Navigator.push(context, MaterialPageRoute(builder: (_) => ConfigAula(aula: widget.aula)));
+                                this.mostrarBottom();
+                              },
                               color: Colors.white,
                               highlightColor: Colors.white,
                               focusColor: Colors.white,
@@ -118,15 +145,15 @@ class AulaDetalheHeader extends StatelessWidget {
                     ]),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 6),
-                      child: Text(aula.nome,
+                      child: Text(widget.aula.nome,
                           style: GoogleFonts.dmSans(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
                     )
                   ],
                 )),
-            Container(height: isProfessor ? 70 : 0),
+            Container(height: widget.isProfessor ? 70 : 0),
           ]),
         ),
-        isProfessor
+        widget.isProfessor
             ? Positioned(
                 top: 150,
                 left: 0,
@@ -139,23 +166,22 @@ class AulaDetalheHeader extends StatelessWidget {
                     shrinkWrap: true,
                     children: <Widget>[
                       Opcao(
+                        titulo: 'Fazer chamada',
+                        cor: Colors.blue,
+                        icone: Icons.list,
+                        acao: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ChamadaView(aula: widget.aula))),
+                      ),
+                      Opcao(
                           titulo: 'Adicionar aluno',
                           cor: Colors.purple[400],
                           icone: Icons.add,
-                          acao: () => Navigator.push(context, MaterialPageRoute(builder: (_) => AddAluno(aula: aula)))),
-                      Opcao(
-                          titulo: 'Alunos', cor: Colors.orange[400], icone: Icons.people, acao: () => this.modalAlunos(context)),
+                          acao: () => Navigator.push(context, MaterialPageRoute(builder: (_) => AddAluno(aula: widget.aula)))),
+                      Opcao(titulo: 'Alunos', cor: Colors.orange[400], icone: Icons.people, acao: this.modalAlunos),
                       Opcao(
                           titulo: 'Adicionar tarefa',
                           cor: Colors.teal[400],
                           icone: Icons.assignment,
-                          acao: () => Navigator.push(context, MaterialPageRoute(builder: (_) => AddTarefa(aula: aula)))),
-                      Opcao(
-                        titulo: 'Fazer chamada',
-                        cor: Colors.blue,
-                        icone: Icons.list,
-                        acao: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ChamadaView(aula: aula))),
-                      ),
+                          acao: () => Navigator.push(context, MaterialPageRoute(builder: (_) => AddTarefa(aula: widget.aula)))),
                     ],
                   ),
                 ),
