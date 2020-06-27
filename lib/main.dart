@@ -81,7 +81,7 @@ class SplashScreen extends StatelessWidget {
             duration: Duration(milliseconds: 2500),
             child: Image.asset(
               'assets/book.png',
-              width: 150,
+              width: 120,
             )),
       ),
     );

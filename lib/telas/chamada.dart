@@ -145,32 +145,40 @@ class _DialogoState extends State<Dialogo> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black.withOpacity(0.4),
-      body: AlertDialog(
-        title: Text('Nova Chamada'),
-        titlePadding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-        contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-        content: Container(
-          width: 400,
-          height: 120,
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: Column(
-            children: <Widget>[
-              DateInput(escolher: this.escolherData, valor: data, label: 'Data'),
-            ],
+    return GestureDetector(
+      child: Scaffold(
+        backgroundColor: Colors.black.withOpacity(0.4),
+        body: AlertDialog(
+          title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text('Nova Chamada'),
+            IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () => Navigator.of(context).pop(),
+            )
+          ]),
+          titlePadding: EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            width: 400,
+            height: 120,
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            child: Column(
+              children: <Widget>[
+                DateInput(escolher: this.escolherData, valor: data, label: 'Data'),
+              ],
+            ),
           ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancelar', style: TextStyle(fontSize: 18)),
+              onPressed: () => Navigator.pop(context),
+            ),
+            FlatButton(
+              child: Text('Criar', style: TextStyle(fontSize: 18)),
+              onPressed: this.criarDataChamada,
+            )
+          ],
         ),
-        actions: <Widget>[
-          FlatButton(
-            child: Text('Cancelar', style: TextStyle(fontSize: 18)),
-            onPressed: () => Navigator.pop(context),
-          ),
-          FlatButton(
-            child: Text('Criar', style: TextStyle(fontSize: 18)),
-            onPressed: this.criarDataChamada,
-          )
-        ],
       ),
     );
   }
@@ -237,16 +245,28 @@ class _DialogoListaState extends State<DialogoLista> {
               case ConnectionState.done:
                 if (snapshot.data.length > 0) {
                   retorno = AlertDialog(
-                    title: Text('Lista de alunos'),
+                    title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                      Text('Lista de alunos'),
+                      IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () => Navigator.of(context).pop(),
+                      )
+                    ]),
                     titlePadding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                    contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+                    contentPadding: EdgeInsets.zero,
                     content: Container(height: 350, width: 400, child: this.gerarLista(snapshot.data)),
                   );
                 } else
                   retorno = AlertDialog(
-                    title: Text('Lista de alunos'),
+                    title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                      Text('Lista de alunos'),
+                      IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () => Navigator.of(context).pop(),
+                      )
+                    ]),
                     titlePadding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-                    contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+                    contentPadding: EdgeInsets.zero,
                     content: Container(height: 150, width: 400, child: Center(child: Text('Sem alunos'))),
                     actions: <Widget>[
                       FlatButton(
@@ -337,9 +357,15 @@ class _VerListaState extends State<VerLista> {
     return Scaffold(
         backgroundColor: Colors.black.withOpacity(0.4),
         body: AlertDialog(
-          title: Text('Chamada ${widget.dataChamada.data}'),
+          title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text('Chamada ${widget.dataChamada.data}'),
+            IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () => Navigator.of(context).pop(),
+            )
+          ]),
           titlePadding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+          contentPadding: EdgeInsets.zero,
           content: Container(
               height: 350,
               width: 400,

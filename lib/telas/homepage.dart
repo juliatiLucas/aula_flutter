@@ -211,11 +211,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.sync),
-                title: Text('Sincronizar'),
-                onTap: () {},
-              ),
-              ListTile(
                 leading: Icon(Icons.exit_to_app),
                 title: Text('Sair'),
                 onTap: this.sair,

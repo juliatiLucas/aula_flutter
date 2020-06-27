@@ -70,7 +70,6 @@ class _AulaInfoState extends State<AulaInfo> {
     return tarefas;
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Column(children: [
@@ -196,36 +195,38 @@ class _DiscussaoState extends State<Discussao> {
           ),
           Expanded(
             flex: 1,
-            child: Container(
+            child: Material(
               color: Colors.transparent,
-              padding: EdgeInsets.symmetric(vertical: 2, horizontal: 12),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                      flex: 8,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(25)),
-                        child: TextFormField(
-                          focusNode: this.msgFocus,
-                          controller: this._mensagem,
-                          style: TextStyle(color: Cores.dark),
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              fillColor: Colors.grey[300].withOpacity(0.7),
-                              filled: true,
-                              hintStyle: TextStyle(color: Cores.dark.withOpacity(0.6)),
-                              hintText: 'Sua mensagem'),
-                        ),
-                      )),
-                  IconButton(
-                    icon: Icon(Icons.send),
-                    onPressed: this.enviar,
-                  )
-                ],
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 2, horizontal: 12),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                        flex: 8,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(25)),
+                          child: TextFormField(
+                            focusNode: this.msgFocus,
+                            controller: this._mensagem,
+                            style: TextStyle(color: Cores.dark),
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                errorBorder: InputBorder.none,
+                                disabledBorder: InputBorder.none,
+                                fillColor: Colors.grey[300].withOpacity(0.7),
+                                filled: true,
+                                hintStyle: TextStyle(color: Cores.dark.withOpacity(0.6)),
+                                hintText: 'Sua mensagem'),
+                          ),
+                        )),
+                    IconButton(
+                      icon: Icon(Icons.send),
+                      onPressed: this.enviar,
+                    )
+                  ],
+                ),
               ),
             ),
           ),

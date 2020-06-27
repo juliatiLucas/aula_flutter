@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../utils/cores.dart';
 import '../models/aula.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';

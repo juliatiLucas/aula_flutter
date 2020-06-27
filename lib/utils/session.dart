@@ -21,7 +21,6 @@ class Session {
     var prefs = await SharedPreferences.getInstance();
     prefs.setString('userData', null);
     prefs.setBool('isAuthenticated', false);
-    prefs.setString('token', null);
   }
 
   Future<bool> isAuthenticated() async {

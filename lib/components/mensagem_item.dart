@@ -50,7 +50,15 @@ class _MensagemItemState extends State<MensagemItem> {
                                 fontSize: 16,
                                 color: widget.mensagem.aluno != null ? Colors.black : Cores.primary),
                           ),
-                          Opacity(opacity: 0.9, child: Text(widget.mensagem.texto, style: TextStyle(fontSize: 16)))
+                          Opacity(opacity: 0.9, child: Text(widget.mensagem.texto, style: TextStyle(fontSize: 16))),
+                          Container(
+                              padding: EdgeInsets.only(top: 4),
+                              child: Opacity(
+                                  opacity: 0.7,
+                                  child: Text(
+                                    widget.mensagem.data,
+                                    style: TextStyle(fontSize: 12),
+                                  ))),
                         ],
                       ),
                     ));
