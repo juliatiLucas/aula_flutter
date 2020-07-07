@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import '../utils/cores.dart';
-// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flushbar/flushbar.dart';
 import '../utils/session.dart';
 import '../utils/config.dart';
@@ -148,48 +147,6 @@ class _LoginState extends State<Login> {
                           ])
                         ],
                       )),
-                  // Text('Logar com:', style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
-                  // Container(
-                  //     padding: EdgeInsets.only(top: 18),
-                  //     child: Row(
-                  //       mainAxisAlignment: MainAxisAlignment.center,
-                  //       children: <Widget>[
-                  //         Expanded(
-                  //           child: Padding(
-                  //             padding: EdgeInsets.symmetric(horizontal: 3),
-                  //             child: FlatButton(
-                  //               padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                  //               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
-                  //               color: Colors.white,
-                  //               child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  //                 FaIcon(FontAwesomeIcons.facebookSquare, color: Color(0xff3b5998)),
-                  //                 Padding(
-                  //                     padding: EdgeInsets.symmetric(horizontal: 5),
-                  //                     child: Text('Facebook', style: TextStyle(fontSize: 18, color: Color(0xff3b5998))))
-                  //               ]),
-                  //               onPressed: () {},
-                  //             ),
-                  //           ),
-                  //         ),
-                  //         Expanded(
-                  //           child: Padding(
-                  //             padding: EdgeInsets.symmetric(horizontal: 3),
-                  //             child: FlatButton(
-                  //               padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-                  //               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
-                  //               color: Colors.white,
-                  //               child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  //                 FaIcon(FontAwesomeIcons.google, color: Color(0xffd93838)),
-                  //                 Padding(
-                  //                     padding: EdgeInsets.symmetric(horizontal: 5),
-                  //                     child: Text('Google', style: TextStyle(fontSize: 18, color: Color(0xffd93838))))
-                  //               ]),
-                  //               onPressed: () {},
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     )),
                 ],
               ),
             ),

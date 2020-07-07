@@ -241,26 +241,25 @@ class _HomePageState extends State<HomePage> {
                     child: Container(
                         padding: EdgeInsets.only(top: 15, bottom: 15),
                         child: FutureBuilder<List<Aula>>(
-                          future: this._getAulas(),
-                          builder: (_, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return Container(height: 40, width: 40, child: Center(child: CircularProgressIndicator()));
-                            } else if (snapshot.connectionState == ConnectionState.done) {
-                              return ListView.builder(
-                                itemCount: snapshot.data.length,
-                                itemBuilder: (_, index) {
-                                  Aula aula = snapshot.data[index];
-                                  return ListTile(
-                                    onTap: () =>
-                                        Navigator.push(context, MaterialPageRoute(builder: (_) => AulaDetalhe(aula: aula))),
-                                    title: Text(aula.nome, style: TextStyle(fontSize: 18)),
-                                  );
-                                },
-                              );
-                            }
-                            return Container();
-                          },
-                        )),
+                            future: this._getAulas(),
+                            builder: (_, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return Container(height: 40, width: 40, child: Center(child: CircularProgressIndicator()));
+                              } else if (snapshot.connectionState == ConnectionState.done) {
+                                return ListView.builder(
+                                    itemCount: snapshot.data.length,
+                                    itemBuilder: (_, index) {
+                                      Aula aula = snapshot.data[index];
+                                      return ListTile(
+                                        onTap: () =>
+                                            Navigator.push(context, MaterialPageRoute(builder: (_) => AulaDetalhe(aula: aula))),
+                                        title: Text(aula.nome, style: TextStyle(fontSize: 18)),
+                                        subtitle: Text("Professor: ${aula.professor.nome}"),
+                                      );
+                                    });
+                              }
+                              return Container();
+                            })),
                   )
                 ],
               ),

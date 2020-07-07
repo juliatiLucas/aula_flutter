@@ -5,7 +5,6 @@ import '../models/mensagem.dart';
 import '../models/tarefa.dart';
 import 'package:flutter/material.dart';
 import '../models/aula.dart';
-
 import '../utils/cores.dart';
 import '../utils/session.dart';
 import '../utils/config.dart';
@@ -97,14 +96,19 @@ class _AulaInfoState extends State<AulaInfo> {
         child: FutureBuilder<List<Tarefa>>(
             future: this.getTarefas(),
             builder: (_, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done)
-                return ListView.builder(
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (_, index) {
-                      Tarefa tarefa = snapshot.data[index];
-                      return TarefaCard(tarefa: tarefa);
-                    });
-              return Container();
+              if (snapshot.connectionState == ConnectionState.done) {
+                return snapshot.data.length > 0
+                    ? ListView.builder(
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (_, index) {
+                          Tarefa tarefa = snapshot.data[index];
+                          return TarefaCard(tarefa: tarefa, acao: () => setState(() {}));
+                        })
+                    : Container(
+                        padding: EdgeInsets.symmetric(vertical: 40),
+                        child: Align(alignment: Alignment.topCenter, child: Text('Sem tarefas')));
+              }
+              return Center(child: CircularProgressIndicator());
             }),
       )
     ]);
